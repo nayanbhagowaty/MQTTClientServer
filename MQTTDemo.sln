@@ -9,9 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client2", "Client2\Client2.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQTTServer", "MQTTServer\MQTTServer.csproj", "{D56D2888-969E-4EF3-B5B8-8AD79E358706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client3", "Client3\Client3.csproj", "{68F4AB1A-0F54-41DE-A5C3-1A3F5C7607EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client3", "Client3\Client3.csproj", "{68F4AB1A-0F54-41DE-A5C3-1A3F5C7607EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{E2DDF8B6-EE3F-4DB1-B769-A7615196DC53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{E2DDF8B6-EE3F-4DB1-B769-A7615196DC53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F24B4F95-C6C2-4097-A7DA-8B88979D957C}"
+	ProjectSection(SolutionItems) = preProject
+		README.txt = README.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

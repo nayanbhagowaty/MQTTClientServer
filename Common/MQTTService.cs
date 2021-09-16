@@ -5,6 +5,10 @@ using MQTTnet.Client.Options;
 using MQTTnet.Extensions.ManagedClient;
 using MQTTnet.Server;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Common
@@ -15,11 +19,24 @@ namespace Common
         public int MessageCounter { get; private set; }
         public IManagedMqttClient GetMQTTClient(string clientId ) {
             ClientId = clientId;
+            Console.WriteLine();
             Console.WriteLine($"=============================================== CLIENT {clientId} STARTING ==================================================");
+            
+            var param = new MqttClientOptionsBuilderTlsParameters
+            {
+                AllowUntrustedCertificates = true,
+                UseTls = true,
+                SslProtocol = System.Security.Authentication.SslProtocols.Tls12,
+                Certificates = new List<X509Certificate>
+                {
+                    new X509Certificate2(@"c:\cert\client.pfx") //add password if created in step 6
+                }
+            };
             // Creates a new client
             var builder = new MqttClientOptionsBuilder()
                                                     .WithClientId($"Client{clientId}")
-                                                    .WithTcpServer("localhost", 707);
+                                                    .WithTls(param)
+                                                    .WithTcpServer("localhost", 8883);
 
             // Create client options objects
             var options = new ManagedMqttClientOptionsBuilder()
