@@ -6,8 +6,6 @@ using MQTTnet.Extensions.ManagedClient;
 using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
@@ -17,10 +15,10 @@ namespace Common
     {
         public string ClientId = "";
         public int MessageCounter { get; private set; }
-        public IManagedMqttClient GetMQTTClient(string clientId ) {
+        public IManagedMqttClient GetMQTTClient(string clientId, string userName, string password ) {
             ClientId = clientId;
             Console.WriteLine();
-            Console.WriteLine($"=============================================== CLIENT {clientId} STARTING ==================================================");
+            Console.WriteLine($"=============================================== CLIENT: {clientId} STARTING ==================================================");
             
             var param = new MqttClientOptionsBuilderTlsParameters
             {
@@ -33,8 +31,8 @@ namespace Common
                 }
             };
             // Creates a new client
-            var builder = new MqttClientOptionsBuilder()
-                                                    .WithClientId($"Client{clientId}")
+            var builder = new MqttClientOptionsBuilder().WithCredentials(userName, password)
+                                                    .WithClientId(clientId)
                                                     .WithTls(param)
                                                     .WithTcpServer("localhost", 8883);
 
@@ -51,18 +49,8 @@ namespace Common
             _mqttClient.ConnectedHandler = new MqttClientConnectedHandlerDelegate(OnConnected);
             _mqttClient.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(OnDisconnected);
             _mqttClient.ConnectingFailedHandler = new ConnectingFailedHandlerDelegate(OnConnectingFailed);
-            _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic($"client{clientId}/topic/json").Build());
             // Starts a connection with the Broker
             _mqttClient.StartAsync(options).GetAwaiter().GetResult();
-            _mqttClient.UseApplicationMessageReceivedHandler(e =>
-            {
-                Console.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
-                Console.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");
-                Console.WriteLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}");
-                Console.WriteLine($"+ QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
-                Console.WriteLine($"+ Retain = {e.ApplicationMessage.Retain}");
-                Console.WriteLine();
-            });
             return _mqttClient;
         }
 
@@ -87,17 +75,17 @@ namespace Common
         }
         public void OnConnected(MqttClientConnectedEventArgs obj)
         {
-            Console.WriteLine($"Client{ClientId} cuccessfully connected.");
+            Console.WriteLine($"Client: {ClientId} cuccessfully connected.");
         }
 
         public void OnConnectingFailed(ManagedProcessFailedEventArgs obj)
         {
-            Console.WriteLine($"Client{ClientId} couldn't connect to broker.");
+            Console.WriteLine($"Client: {ClientId} couldn't connect to broker.");
         }
 
         public void OnDisconnected(MqttClientDisconnectedEventArgs obj)
         {
-            Console.WriteLine($"Client{ClientId} successfully disconnected.");
+            Console.WriteLine($"Client: {ClientId} successfully disconnected.");
         }
         public void OnNewConnection(MqttConnectionValidatorContext context)
         {

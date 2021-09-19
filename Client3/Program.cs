@@ -11,8 +11,9 @@ namespace Client3
     {
         static void Main(string[] args)
         {
+            var clientId = "client3";
             var service = new MQTTService();
-            var client = service.GetMQTTClient("3");
+            var client = service.GetMQTTClient(clientId, clientId, "password");
 
             string[] clients = { "1", "2" };
             do
@@ -27,7 +28,7 @@ namespace Client3
                     Console.WriteLine("Invalid Input!");
                 else
                 {
-                    string json = JsonSerializer.Serialize(new { message = "Hi :)", sent = DateTimeOffset.UtcNow });
+                    string json = JsonSerializer.Serialize(new { message = $"Hi to client{val})", sent = DateTimeOffset.UtcNow });
                     client.PublishAsync($"client{val}/topic/json", json);
                 }
             } while (true);
